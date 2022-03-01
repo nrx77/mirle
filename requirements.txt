@@ -3,6 +3,7 @@ anytree
 appdirs
 aria2p
 attrdict
+bencoding
 beautifulsoup4
 cfscrape
 feedparser
