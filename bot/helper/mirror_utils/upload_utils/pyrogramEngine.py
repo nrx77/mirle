@@ -30,14 +30,15 @@ class TgUploader:
         self.__is_cancelled = False
         self.__as_doc = AS_DOCUMENT
         self.__thumb = f"Thumbnails/{listener.message.from_user.id}.jpg"
-        self.__sent_msg = app.get_messages(self.__listener.message.chat.id, self.__listener.uid)
+        self.__sent_msg = app.get_messages(self.__listener.message.chat.id, self.message_id, self.__listener.uid)
         self.__msgs_dict = {}
         self.__corrupted = 0
         self.__resource_lock = RLock()
         self.__user_settings()
 
     def upload(self):
-        path = f"{DOWNLOAD_DIR}{self.__listener.uid}"
+        #path = f"{DOWNLOAD_DIR}{self.__listener.uid}"
+        path = f"{DOWNLOAD_DIR}{self.message_id}"
         size = get_readable_file_size(get_path_size(path))
         for dirpath, subdir, files in sorted(walk(path)):
             for file_ in sorted(files):
@@ -54,7 +55,7 @@ class TgUploader:
                 self.__upload_file(up_path, file_, dirpath)
                 if self.__is_cancelled:
                     return
-                self.__msgs_dict[file_] = self.__sent_msg.uid
+                self.__msgs_dict[file_] = self.__sent_msg.message_id
                 self._last_uploaded = 0
                 sleep(1)
         if len(self.__msgs_dict) <= self.__corrupted:
